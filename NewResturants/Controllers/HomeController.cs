@@ -46,6 +46,14 @@ namespace NewResturants.Controllers
             return customerSignUp;
         }
 
+        [HttpPost("AddOrder")]
+        public async Task<Response> AddOrder(OrderRequestVM OrderRequest)
+        {
+
+            var customerSignUp = await authManager.AddCustomerOrder(OrderRequest);
+            return customerSignUp;
+        }
+
         [HttpGet("getResturantMenu")]
         public async Task<Response> getResturantMenu(int ResturantId)
         {
@@ -55,11 +63,29 @@ namespace NewResturants.Controllers
         }
 
 
+
+
         [HttpDelete("{id}")]
-        public async Task<Response> DeleteOrder(int id)
+        public async Task<Response> DeleteOrder(int Orderid)
         {
-            var DeleteOrder = await authManager.Delete(id);
+            var DeleteOrder = await authManager.Delete(Orderid);
             return DeleteOrder;
         }
+
+
+        [HttpPost("WaitingForDelivery")]
+        public async Task<Response> ChangeOrderStatus(int Orderid)
+        {
+            var SendOrder = await authManager.SendOrder(Orderid);
+            return SendOrder;
+        }
+        [HttpPost("cancelOrder")]
+        public async Task<Response> cancelOrder(int Orderid)
+        {
+            var SendOrder = await authManager.CancelOrder(Orderid);
+            return SendOrder;
+        }
+        
+
     }
 }

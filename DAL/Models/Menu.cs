@@ -1,6 +1,4 @@
-﻿
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -10,21 +8,13 @@ using System.Threading.Tasks;
 
 namespace DAL.Models
 {
-    public class Resturant
+    public class Menu
     {
-
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ResturantID { get; set; }
-        public string? ResturantName { get; set; }
-        public ICollection<Order>? Orders { get; set; }
-
-       
         public int MenuId { get; set; }
-         [ForeignKey("MenuId")]
-        public Menu? Menus { get; set; }
-   
-
-
+        public string MenuName { get; set; }
+        public ICollection<Food> Foods { get; set; }
+        public ICollection<Resturant> Resturants { get; set; }
     }
 }

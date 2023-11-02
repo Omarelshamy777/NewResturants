@@ -15,16 +15,18 @@ namespace DAL.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int FoodId { get; set; }
         public string? FoodName { get; set; }
-        public string? FoodPrice { get; set; }
+        public double? FoodPrice { get; set; }
         public string? Categories { get; set; }
 
-        [ForeignKey("Orders")]
-        public int OrderId { get; set; }
-        public Order? Orders { get; set; }
+  
 
+        public ICollection<Order>? Order { get; set; }
 
-        [ForeignKey("Resturants")]
-        public int ResturantID { get; set; }
+        
+        public int MenuId { get; set; }
+        [ForeignKey("MenuId")]
+        public Menu? Menus { get; set; }
+
         public ICollection<Resturant>? Resturants { get; set; }
     }
 }

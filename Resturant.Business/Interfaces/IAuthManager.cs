@@ -20,9 +20,13 @@ namespace Resturant.Business.Interfaces
         //public List<ResturantsMenu> GetResturantMenu(int resturantId);
 
         public Task<Response> GetResturantMenu(int resturantId);
-        //public List<ResturantsMenu> AddOrder(OrderRequestVM OrderRequest);
+        public Task<Response> AddCustomerOrder(OrderRequestVM OrderRequest);
 
-        public Task<Response> Delete(int id);
+        public Task<Response> Delete(int Orderid);
+
+        public  Task<Response> SendOrder(int Orderid);
+        public  Task<Response> CancelOrder(int Orderid);
+
 
 
     }

@@ -21,11 +21,22 @@ namespace DAL.Models
         public double? TotalPrice { get; set; }
         public OrderStatusEnum OrderStaus { get; set; }
 
-        public ICollection<Food>? Foods { get; set; }
 
-        public ICollection<Resturant>? Resturants { get; set; }
-        [ForeignKey("Customers")]
+       
+        public int FoodsId { get; set; }
+        [ForeignKey("FoodsId")]
+        public Food? Foods { get; set; }
+
+
+        
+        public int ResturantID { get; set; }
+        [ForeignKey("ResturantID")]
+        public Resturant? Resturants { get; set; }
+
+      
         public int CustomerID { get; set; }
+
+        [ForeignKey("CustomerID")]
         public Customer? Customers { get; set; }
     }
 }

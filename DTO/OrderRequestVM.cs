@@ -19,6 +19,7 @@ namespace DTO
         public double? Price { get; set; }
         public OrderStatusEnum OrderStaus { get; set; }
         public int FoodId { get; set; }
+        public decimal? FoodPrice { get; set; }
         public string? FoodName { get; set; }
         public string? Categories { get; set; }
         public int ResturantID { get; set; }

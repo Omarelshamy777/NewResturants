@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ResturantsContext))]
-    [Migration("20231102112322_databaseUpdat")]
-    partial class databaseUpdat
+    [Migration("20231102171510_generateDB")]
+    partial class generateDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -67,12 +67,34 @@ namespace DAL.Migrations
                     b.Property<string>("FoodName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FoodPrice")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<double?>("FoodPrice")
+                        .HasColumnType("float");
+
+                    b.Property<int>("MenuId")
+                        .HasColumnType("int");
 
                     b.HasKey("FoodId");
 
+                    b.HasIndex("MenuId");
+
                     b.ToTable("Food", (string)null);
+                });
+
+            modelBuilder.Entity("DAL.Models.Menu", b =>
+                {
+                    b.Property<int>("MenuId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MenuId"));
+
+                    b.Property<string>("MenuName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("MenuId");
+
+                    b.ToTable("Menu", (string)null);
                 });
 
             modelBuilder.Entity("DAL.Models.Order", b =>
@@ -83,7 +105,10 @@ namespace DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
 
-                    b.Property<int?>("CustomersCustomerID")
+                    b.Property<int>("CustomerID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FoodsId")
                         .HasColumnType("int");
 
                     b.Property<string>("OrderNumber")
@@ -92,12 +117,19 @@ namespace DAL.Migrations
                     b.Property<int>("OrderStaus")
                         .HasColumnType("int");
 
+                    b.Property<int>("ResturantID")
+                        .HasColumnType("int");
+
                     b.Property<double?>("TotalPrice")
                         .HasColumnType("float");
 
                     b.HasKey("OrderId");
 
-                    b.HasIndex("CustomersCustomerID");
+                    b.HasIndex("CustomerID");
+
+                    b.HasIndex("FoodsId");
+
+                    b.HasIndex("ResturantID");
 
                     b.ToTable("Order", (string)null);
                 });
@@ -110,81 +142,90 @@ namespace DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ResturantID"));
 
+                    b.Property<int?>("FoodId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("MenuId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ResturantName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ResturantID");
 
+                    b.HasIndex("FoodId");
+
+                    b.HasIndex("MenuId");
+
                     b.ToTable("Resturant", (string)null);
                 });
 
-            modelBuilder.Entity("FoodResturant", b =>
+            modelBuilder.Entity("DAL.Models.Food", b =>
                 {
-                    b.Property<int>("FoodsFoodId")
-                        .HasColumnType("int");
+                    b.HasOne("DAL.Models.Menu", "Menus")
+                        .WithMany("Foods")
+                        .HasForeignKey("MenuId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<int>("ResturantsResturantID")
-                        .HasColumnType("int");
-
-                    b.HasKey("FoodsFoodId", "ResturantsResturantID");
-
-                    b.HasIndex("ResturantsResturantID");
-
-                    b.ToTable("FoodResturant");
-                });
-
-            modelBuilder.Entity("OrderResturant", b =>
-                {
-                    b.Property<int>("OrdersOrderId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ResturantsResturantID")
-                        .HasColumnType("int");
-
-                    b.HasKey("OrdersOrderId", "ResturantsResturantID");
-
-                    b.HasIndex("ResturantsResturantID");
-
-                    b.ToTable("OrderResturant");
+                    b.Navigation("Menus");
                 });
 
             modelBuilder.Entity("DAL.Models.Order", b =>
                 {
                     b.HasOne("DAL.Models.Customer", "Customers")
                         .WithMany()
-                        .HasForeignKey("CustomersCustomerID");
+                        .HasForeignKey("CustomerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DAL.Models.Food", "Foods")
+                        .WithMany("Order")
+                        .HasForeignKey("FoodsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DAL.Models.Resturant", "Resturants")
+                        .WithMany("Orders")
+                        .HasForeignKey("ResturantID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Customers");
+
+                    b.Navigation("Foods");
+
+                    b.Navigation("Resturants");
                 });
 
-            modelBuilder.Entity("FoodResturant", b =>
+            modelBuilder.Entity("DAL.Models.Resturant", b =>
                 {
                     b.HasOne("DAL.Models.Food", null)
-                        .WithMany()
-                        .HasForeignKey("FoodsFoodId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("Resturants")
+                        .HasForeignKey("FoodId");
 
-                    b.HasOne("DAL.Models.Resturant", null)
-                        .WithMany()
-                        .HasForeignKey("ResturantsResturantID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("DAL.Models.Menu", null)
+                        .WithMany("Resturants")
+                        .HasForeignKey("MenuId");
                 });
 
-            modelBuilder.Entity("OrderResturant", b =>
+            modelBuilder.Entity("DAL.Models.Food", b =>
                 {
-                    b.HasOne("DAL.Models.Order", null)
-                        .WithMany()
-                        .HasForeignKey("OrdersOrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Order");
 
-                    b.HasOne("DAL.Models.Resturant", null)
-                        .WithMany()
-                        .HasForeignKey("ResturantsResturantID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Resturants");
+                });
+
+            modelBuilder.Entity("DAL.Models.Menu", b =>
+                {
+                    b.Navigation("Foods");
+
+                    b.Navigation("Resturants");
+                });
+
+            modelBuilder.Entity("DAL.Models.Resturant", b =>
+                {
+                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }
