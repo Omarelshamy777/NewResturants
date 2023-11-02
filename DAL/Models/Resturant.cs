@@ -19,11 +19,11 @@ namespace DAL.Models
         public string? ResturantName { get; set; }
         public ICollection<Order>? Orders { get; set; }
 
-       
+
         public int MenuId { get; set; }
-         [ForeignKey("MenuId")]
+        [ForeignKey("MenuId")]
         public Menu? Menus { get; set; }
-   
+
 
 
     }

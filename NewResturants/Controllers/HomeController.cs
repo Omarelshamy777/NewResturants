@@ -1,7 +1,9 @@
-﻿using DAL.Models;
+﻿using DAL;
+using DAL.Models;
 using DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Resturant.Business;
 using Resturant.Business.Interfaces;
 
@@ -13,10 +15,12 @@ namespace NewResturants.Controllers
     public class HomeController : ControllerBase
     {
         private readonly IAuthManager authManager;
+        private readonly ResturantsContext _resturantContext;
 
-        public HomeController(IAuthManager authManager)
+        public HomeController(IAuthManager authManager, ResturantsContext resturantContext)
         {
             this.authManager = authManager;
+            _resturantContext = resturantContext;
         }
 
         [HttpPost("signUp")]
@@ -37,14 +41,15 @@ namespace NewResturants.Controllers
         }
 
 
-        [HttpGet("getAllMenus")]
-        public async Task<Response> getAllMenus()
-        {
+        //[HttpGet("getAllMenus")]
+        //public async Task<IActionResult>  getAllMenus()
+        //{
 
-            //HttpContext.Session.Set<LoginVM>("Login", Login);
-            var customerSignUp = await authManager.GetAllMenus();
-            return customerSignUp;
-        }
+        //    //HttpContext.Session.Set<LoginVM>("Login", Login);
+        //    //var customerSignUp =  authManager.GetAllMenus();
+        //    var GetAllMenus = await _resturantContext.Resturants.Include(c => c.Menus).ThenInclude(d => d.Foods).ToListAsync();
+        //    return Ok(GetAllMenus);
+        //}
 
         [HttpPost("AddOrder")]
         public async Task<Response> AddOrder(OrderRequestVM OrderRequest)
@@ -55,11 +60,11 @@ namespace NewResturants.Controllers
         }
 
         [HttpGet("getResturantMenu")]
-        public async Task<Response> getResturantMenu(int ResturantId)
+        public async Task<IActionResult> getResturantMenu(int ResturantId)
         {
          
             var customerSignUp = await authManager.GetResturantMenu(ResturantId);
-            return customerSignUp;
+            return Ok(customerSignUp.Data);
         }
 
 

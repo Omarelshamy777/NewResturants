@@ -99,8 +99,8 @@ namespace Resturant.Business.Managers
         public async Task<Response> GetAllMenus()
         {
 
-            var GetAllMenus = await _resturantContext.Resturants.Include(c=>c.Menus).ThenInclude(d=>d.Foods).ToListAsync();
-            //var GetAllMenusWIthFooda = await _resturantContext.Foods.Include(x => x.Resturants).ToListAsync();
+            var GetAllMenus = await _resturantContext.Resturants.Include(c => c.Menus).ThenInclude(d => d.Foods).ToListAsync();
+            var GetAllMenusWIthFooda = await _resturantContext.Foods.Include(x => x.Resturants).ToListAsync();
 
             return new Response
             {
