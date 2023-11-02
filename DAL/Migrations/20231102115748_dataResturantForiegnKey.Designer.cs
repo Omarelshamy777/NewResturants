@@ -4,6 +4,7 @@ using DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ResturantsContext))]
-    partial class ResturantsContextModelSnapshot : ModelSnapshot
+    [Migration("20231102115748_dataResturantForiegnKey")]
+    partial class dataResturantForiegnKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,7 +86,7 @@ namespace DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
 
-                    b.Property<int>("CustomerID")
+                    b.Property<int?>("CustomersCustomerID")
                         .HasColumnType("int");
 
                     b.Property<string>("OrderNumber")
@@ -97,7 +100,7 @@ namespace DAL.Migrations
 
                     b.HasKey("OrderId");
 
-                    b.HasIndex("CustomerID");
+                    b.HasIndex("CustomersCustomerID");
 
                     b.ToTable("Order", (string)null);
                 });
@@ -152,9 +155,7 @@ namespace DAL.Migrations
                 {
                     b.HasOne("DAL.Models.Customer", "Customers")
                         .WithMany()
-                        .HasForeignKey("CustomerID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CustomersCustomerID");
 
                     b.Navigation("Customers");
                 });

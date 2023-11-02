@@ -18,6 +18,13 @@ namespace DAL.Models
         public string? FoodPrice { get; set; }
         public string? Categories { get; set; }
 
-          public ICollection<Resturant>? Resturants { get; set; }
+        [ForeignKey("Orders")]
+        public int OrderId { get; set; }
+        public Order? Orders { get; set; }
+
+
+        [ForeignKey("Resturants")]
+        public int ResturantID { get; set; }
+        public ICollection<Resturant>? Resturants { get; set; }
     }
 }

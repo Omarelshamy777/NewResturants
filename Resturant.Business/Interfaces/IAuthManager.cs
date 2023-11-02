@@ -17,10 +17,12 @@ namespace Resturant.Business.Interfaces
         //public Task<List<ResturantsMenu>> GetAllMenus();
 
         public  Task<Response> GetAllMenus();
-        public List<ResturantsMenu> GetResturantMenu(int resturantId);
+        //public List<ResturantsMenu> GetResturantMenu(int resturantId);
+
+        public Task<Response> GetResturantMenu(int resturantId);
         //public List<ResturantsMenu> AddOrder(OrderRequestVM OrderRequest);
 
-        public Task<Response> Delete(long id);
+        public Task<Response> Delete(int id);
 
 
     }

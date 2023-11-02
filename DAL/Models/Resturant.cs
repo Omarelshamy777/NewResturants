@@ -18,7 +18,7 @@ namespace DAL.Models
         public int ResturantID { get; set; }
         public string? ResturantName { get; set; }
         public ICollection<Order>? Orders { get; set; }
-        public ICollection<Food>? Foods { get; set; }
+      
 
     }
 }

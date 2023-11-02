@@ -36,18 +36,18 @@ namespace Resturant.Business.Managers
         {
             var obj = new Customer()
             {
-              
+
                 Name = SignUP.Name,
                 userName = SignUP.UserName,
                 Password = SignUP.Password
             };
 
-            var AddCustomer  = _resturantContext.AddAsync<Customer>(obj);
-            
+            var AddCustomer = _resturantContext.AddAsync<Customer>(obj);
+
             if (AddCustomer.IsCompleted)
             {
                 await _resturantContext.SaveChangesAsync();
-                 var response = new Response()
+                var response = new Response()
                 {
 
                     Success = true,
@@ -64,7 +64,7 @@ namespace Resturant.Business.Managers
                 Message = "Sign up Failed!"
             };
 
-         
+
         }
 
         public async Task<Response> Authenticate(LoginVM login)
@@ -73,20 +73,21 @@ namespace Resturant.Business.Managers
             var GetcustomerId = _resturantContext.Customers.Where(x => x.CustomerID == login.UserId).FirstOrDefault();
 
             var CustomerPassword = _resturantContext.Customers.Where(x => x.userName == login.userName && x.Password == login.Password).FirstOrDefault();
-           
+
 
 
             if (CustomerPassword == null)
             {
-              
-                return new Response {
+
+                return new Response
+                {
                     Success = false,
                     Message = "please check username and passowrd"
                 };
             }
             else
             {
-               
+
                 return new Response
                 {
                     Success = true,
@@ -101,22 +102,12 @@ namespace Resturant.Business.Managers
         public async Task<Response> GetAllMenus()
         {
 
-            //var AllMenus = await _resturantContext.Resturants
-            //    .Include(x => x.Foods.Select(f => new ResturantsMenu
-            //    {
-            //        Categories = f.Categories,
-            //        FoodId = f.FoodId,
-            //        FoodName = f.FoodName,
-            //        ResturantName = x.ResturantName,
-            //        ResturantID = x.ResturantID
-            //    }).ToList())
-            //    .ToListAsync();
+            var GetAllMenus = await _resturantContext.Resturants.Include(x => x.Foods).ToListAsync();
+            //var GetAllMenusWIthFooda = await _resturantContext.Foods.Include(x => x.Resturants).ToListAsync();
 
-            var GetAllMenus = await _resturantContext.Resturants.Include(x=>x.Foods).ToListAsync();
             return new Response
             {
                 Data = GetAllMenus
-
             };
 
 
@@ -126,26 +117,71 @@ namespace Resturant.Business.Managers
 
 
 
-        public List<ResturantsMenu> GetResturantMenu(int resturantId)
+        public async Task<Response> GetResturantMenu(int resturantId)
+        {
+            var restaurantMenu = await _resturantContext.Resturants.Include(x => x.Foods).FirstOrDefaultAsync(s => s.ResturantID == resturantId);
+            return new Response
+            {
+                Data = restaurantMenu
+            };
+        }
+
+        public async Task<Response>AddOrder(OrderRequestVM OrderRequest)
         {
 
-            var AllMenus = _resturantContext.Resturants.Include(x => x.Foods.Select(f => new ResturantsMenu { Categories = f.Categories, FoodId = f.FoodId, FoodName = f.FoodName, ResturantName = x.ResturantName, ResturantID = x.ResturantID }).Where(s => s.ResturantID == resturantId).ToList());
-            return (List<ResturantsMenu>)AllMenus;
+            var obj = new Order
+            {
+                OrderId = OrderRequest.OrderID,
+                OrderNumber = OrderRequest.OrderNumber,
+                OrderStaus = OrderRequest.OrderStaus,
+                TotalPrice = OrderRequest.Price,
+                Customers  = new Customer
+                {
+                    CustomerID = OrderRequest.CustomerId,
+                    Name = OrderRequest.CustomerName,
+                    Address = OrderRequest.CustomerAddress
+                    
+                }
+               
+            };
+            var AddOrder = _resturantContext.Oreders.AddAsync(obj);
+            if (AddOrder.IsCompleted)
+            {
+                await _resturantContext.SaveChangesAsync();
+                return new Response
+                {
+                    Message = "Order Added Succisfully"
+                };
+            }
+            else
+            {
+
+                return new Response
+                {
+                    Message = "Error in Added Order"
+                };
+            }
+
+
+
 
         }
 
-        //public List<ResturantsMenu> AddOrder(OrderRequestVM OrderRequest)
-        //{
-        //    var GetOrder = _resturantContext.Oreders.Include(c => c.ResturantsName).Include(d => d.CustomerBase).ToList().Where(v => v.OrderId == OrderRequest.OrderID);
+        public async Task<Response> GetOrder(int OrderId)
+        {
 
-        //    var AddOrder = _resturantContext.Oreders.AddAsync(OrderRequest.);
-        //    var AllMenus = ;
-        //    return (List<ResturantsMenu>)AllMenus;
+            var GetOrder = _resturantContext.Oreders.Include(c => c.Resturants).Include(d => d.Customers).ToList().Where(v => v.OrderId == OrderId);
+          return new Response { Data = GetOrder };
+     
 
-        //}
-  
-            public async Task<Response> Delete(long id)
-            {
+
+
+
+
+        }
+
+        public async Task<Response> Delete(int id)
+        {
             var item = await _resturantContext.Oreders.FindAsync(id);
 
             if (item == null)
@@ -161,7 +197,7 @@ namespace Resturant.Business.Managers
             return new Response
             {
                 Message = "Order is deleted"
-            } ;
+            };
         }
 
     }
