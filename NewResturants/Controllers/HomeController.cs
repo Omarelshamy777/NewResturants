@@ -41,15 +41,15 @@ namespace NewResturants.Controllers
         }
 
 
-        //[HttpGet("getAllMenus")]
-        //public async Task<IActionResult>  getAllMenus()
-        //{
+        [HttpGet("getAllMenus")]
+        public async Task<IActionResult> getAllMenus()
+        {
 
-        //    //HttpContext.Session.Set<LoginVM>("Login", Login);
-        //    //var customerSignUp =  authManager.GetAllMenus();
-        //    var GetAllMenus = await _resturantContext.Resturants.Include(c => c.Menus).ThenInclude(d => d.Foods).ToListAsync();
-        //    return Ok(GetAllMenus);
-        //}
+            //HttpContext.Session.Set<LoginVM>("Login", Login);
+            var customerSignUp = authManager.GetAllMenus();
+            //var GetAllMenus = await _resturantContext.Resturants.Include(c => c.Menus).ThenInclude(d => d.Foods).ToListAsync();
+            return Ok(customerSignUp);
+        }
 
         [HttpPost("AddOrder")]
         public async Task<Response> AddOrder(OrderRequestVM OrderRequest)

@@ -25,7 +25,7 @@ namespace DAL.Models
        
         public int FoodsId { get; set; }
         [ForeignKey("FoodsId")]
-        public Food? Foods { get; set; }
+        public Item? Foods { get; set; }
 
 
         

@@ -14,7 +14,7 @@ namespace DAL.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int MenuId { get; set; }
         public string MenuName { get; set; }
-        public ICollection<Food> Foods { get; set; }
+        public ICollection<Item> Foods { get; set; }
         public ICollection<Resturant> Resturants { get; set; }
     }
 }

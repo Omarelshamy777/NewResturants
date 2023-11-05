@@ -100,10 +100,12 @@ namespace Resturant.Business.Managers
         {
 
             var GetAllMenus = await _resturantContext.Resturants.Include(c => c.Menus).ThenInclude(d => d.Foods).ToListAsync();
-            var GetAllMenusWIthFooda = await _resturantContext.Foods.Include(x => x.Resturants).ToListAsync();
+            var GetAllMenusWIthFooda = await _resturantContext.Items.Include(x => x.Resturants).ToListAsync();
 
             return new Response
             {
+                Message = "View Menu Result",
+                ResponseCode = ResponseTypeEnum.Success,
                 Data = GetAllMenus
             };
 
@@ -139,7 +141,7 @@ namespace Resturant.Business.Managers
                 {
                     ResturantID = OrderRequest.ResturantID,
 
-                },Foods = new Food
+                },Foods = new Item
                 {
                     FoodId = OrderRequest.FoodId,
                 }
