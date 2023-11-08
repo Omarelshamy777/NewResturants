@@ -143,7 +143,7 @@ namespace Resturant.Business.Managers
 
                 },Foods = new Item
                 {
-                    FoodId = OrderRequest.FoodId,
+                    ItemId = OrderRequest.ItemId,
                 }
                 
                
