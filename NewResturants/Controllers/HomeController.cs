@@ -46,7 +46,7 @@ namespace NewResturants.Controllers
         {
 
             //HttpContext.Session.Set<LoginVM>("Login", Login);
-            var customerSignUp = authManager.GetAllMenus();
+            var customerSignUp = await authManager.GetAllMenus();
             //var GetAllMenus = await _resturantContext.Resturants.Include(c => c.Menus).ThenInclude(d => d.Foods).ToListAsync();
             return Ok(customerSignUp);
         }

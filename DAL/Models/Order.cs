@@ -22,18 +22,11 @@ namespace DAL.Models
         public OrderStatusEnum OrderStaus { get; set; }
 
 
-       
-        public int FoodsId { get; set; }
-        [ForeignKey("FoodsId")]
-        public Item? Foods { get; set; }
-
-
-        
-        public int ResturantID { get; set; }
-        [ForeignKey("ResturantID")]
-        public Resturant? Resturants { get; set; }
-
       
+        public int ItemId { get; set; }
+        [ForeignKey("ItemId")]
+        public Item? Items { get; set; }
+
         public int CustomerID { get; set; }
 
         [ForeignKey("CustomerID")]

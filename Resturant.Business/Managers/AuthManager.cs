@@ -96,18 +96,26 @@ namespace Resturant.Business.Managers
         }
 
         //ResturantsMenu
-        public async Task<Response> GetAllMenus()
+        public async Task<List<ResturantsMenuVM>> GetAllMenus()
         {
-
-            var GetAllMenus = await _resturantContext.Resturants.Include(c => c.Menus).ThenInclude(d => d.Foods).ToListAsync();
-            var GetAllMenusWIthFooda = await _resturantContext.Items.Include(x => x.Resturants).ToListAsync();
-
-            return new Response
+        
+            var GetAllMenus =  _resturantContext.Resturants.Include(c => c.Menus).ThenInclude(d => d.Items).Select(x => new ResturantsMenuVM()
             {
-                Message = "View Menu Result",
-                ResponseCode = ResponseTypeEnum.Success,
-                Data = GetAllMenus
-            };
+                ResturantID = x.ResturantID,
+                ResturantName = x.ResturantName
+            ,
+                MenuId = x.Menus.MenuId,
+                MenuName = x.Menus.MenuName,
+                ResturantsMenuItems = x.Menus.Items.Select(y => new ResturantsMenuItemsVM()
+                {
+                    ItemId = y.ItemId,
+                    Categories = y.Categories,
+                    ItemName = y.ItemName,
+                    ItemPrice = y.ItemPrice
+                }).ToList()
+            }).ToList();
+      
+            return GetAllMenus;
 
 
         }
@@ -131,22 +139,23 @@ namespace Resturant.Business.Managers
                 OrderNumber = OrderRequest.OrderNumber,
                 OrderStaus = OrderStatusEnum.Open,
                 TotalPrice = OrderRequest.Price,
-                
-                Customers  = new Customer
+
+                Customers = new Customer
                 {
                     CustomerID = OrderRequest.CustomerId,
-                    Name = OrderRequest.CustomerName,                    
+                    Name = OrderRequest.CustomerName,
                 },
-                Resturants = new DAL.Models.Resturant
-                {
-                    ResturantID = OrderRequest.ResturantID,
+                //Resturants = new DAL.Models.Resturant
+                //{
+                //    ResturantID = OrderRequest.ResturantID,
 
-                },Foods = new Item
+                //},
+                Items = new Item
                 {
                     ItemId = OrderRequest.ItemId,
                 }
-                
-               
+
+
             };
             if (OrderRequest.OrderStaus != OrderStatusEnum.WaitingForDelivery)
             {
@@ -168,7 +177,8 @@ namespace Resturant.Business.Managers
                     };
                 }
 
-            }else
+            }
+            else
             {
                 return new Response
                 {
@@ -180,8 +190,8 @@ namespace Resturant.Business.Managers
         public async Task<Response> GetOrder(int OrderId)
         {
 
-            var GetOrder = _resturantContext.Oreders.Include(c => c.Resturants).Include(d => d.Customers).ToList().Where(v => v.OrderId == OrderId);
-          return new Response { Data = GetOrder };
+            var GetOrder = _resturantContext.Oreders.Include(c => c.Items).Include(d => d.Customers).ToList().Where(v => v.OrderId == OrderId);
+            return new Response { Data = GetOrder };
 
 
         }

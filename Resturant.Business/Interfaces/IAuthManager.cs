@@ -16,8 +16,8 @@ namespace Resturant.Business.Interfaces
         public Task<Response> Authenticate(LoginVM login);
         //public Task<List<ResturantsMenu>> GetAllMenus();
 
-        public  Task<Response> GetAllMenus();
-        //public List<ResturantsMenu> GetResturantMenu(int resturantId);
+        //public  Task<Response> GetAllMenus();
+        public  Task<List<ResturantsMenuVM>> GetAllMenus();
 
         public Task<Response> GetResturantMenu(int resturantId);
         public Task<Response> AddCustomerOrder(OrderRequestVM OrderRequest);
