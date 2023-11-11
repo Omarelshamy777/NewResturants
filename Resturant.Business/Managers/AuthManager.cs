@@ -135,7 +135,6 @@ namespace Resturant.Business.Managers
 
             var obj = new Order
             {
-                OrderId = OrderRequest.OrderID,
                 OrderNumber = OrderRequest.OrderNumber,
                 OrderStaus = OrderStatusEnum.Open,
                 TotalPrice = OrderRequest.Price,
