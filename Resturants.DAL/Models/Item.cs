@@ -1,4 +1,5 @@
 ﻿
+using Castle.DynamicProxy;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -13,10 +14,18 @@ namespace Resturants.DAL.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ItemId { get; set; }
-        public string? ItemName { get; set; }
-        public double? ItemPrice { get; set; }
-        public string? Categories { get; set; }
+        public int Id { get; set; }
+        [Required]
+        [StringLength(Consts.ItemConsts.NameLength)]
+
+        public string Name { get; set; } = string.Empty;
+        [Required]
+ 
+        public double Price { get; set; }
+        [Required]
+        [StringLength(Consts.ItemConsts.CategoryLength)]
+        public string Category { get; set; }=string.Empty;
+
         public int MenuId { get; set; }
         [ForeignKey("MenuId")]
         public Menu? Menus { get; set; }

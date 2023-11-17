@@ -21,7 +21,7 @@ namespace Resturants.Api.Controllers
         }
 
         [HttpPost("signUp")]
-        public async Task<Response> SignUp(SignUPDto signUP)
+        public async Task<Response> SignUp(SignUpDto signUP)
         {
             var customerSignUp = await authManager.SignUp(signUP);
             return customerSignUp;

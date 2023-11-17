@@ -1,4 +1,4 @@
-﻿using Resturant.Application.Enums;
+﻿
 using Resturants.DAL.Enums;
 using System;
 using System.Collections.Generic;
@@ -26,13 +26,13 @@ namespace Resturants.Application.Contracts.ResturantApp.Dtos
         public string? ResturantName { get; set; }
         public string? CustomerName { get; set; }
         public string? CustomerAddress { get; set; }
-        public List<Items>? Items { get; set; }
+        public List<Item>? Items { get; set; }
 
     }
-    public class Items
+    public class Item
     {
-        public int ItemId { get; set; }
-        public string? ItemName { get; set; }
-        public double? ItemPrice { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public double Price { get; set; }
     }
 }

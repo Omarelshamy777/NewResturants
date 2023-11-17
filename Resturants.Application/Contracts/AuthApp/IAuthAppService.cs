@@ -13,7 +13,7 @@ namespace Resturants.Application.Contracts.AuthApp
     {
         //public int SignUp(SignUPVM SignUP);
 
-        public Task<Response> SignUp(SignUPDto signUP);
+        public Task<Response> SignUp(SignUpDto signUP);
 
         public Task<Response> Authenticate(LoginDto login);
         //public Task<List<ResturantsMenu>> GetAllMenus();
@@ -21,8 +21,9 @@ namespace Resturants.Application.Contracts.AuthApp
         //public  Task<Response> GetAllMenus();
         public Task<List<ResturantsMenuDto>> GetAllMenus();
 
-        public Task<Response> GetResturantMenu(int resturantId);
         public Task<Response> AddCustomerOrder(OrderRequestDto orderRequest);
+
+        public Task<Response<ResturantsMenuDto>> GetResturantMenu(int resturantId);
 
         public Task<Response> Delete(int orderId);
 

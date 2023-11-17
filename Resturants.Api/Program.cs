@@ -1,9 +1,6 @@
 
-
-
 using Microsoft.EntityFrameworkCore;
-using Resturant.Application.AppServices;
-using Resturant.Application.Contracts;
+
 using Resturants.Application;
 using Resturants.DAL;
 

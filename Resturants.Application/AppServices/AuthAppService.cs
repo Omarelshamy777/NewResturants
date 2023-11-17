@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.EntityFrameworkCore;
 using Resturants.Application.Contracts.AuthApp;
 using Resturants.Application.Contracts.AuthApp.Dtos;
 using Resturants.Application.Contracts.ResturantApp.Dtos;
@@ -22,13 +23,13 @@ namespace Resturants.Application.AppServices
             _resturantContext = resturantContext;
         }
 
-        public async Task<Response> SignUp(SignUPDto SignUP)
+        public async Task<Response> SignUp(SignUpDto SignUP)
         {
             var obj = new Customer()
             {
 
                 Name = SignUP.Name,
-                userName = SignUP.UserName,
+                UserName = SignUP.UserName,
                 Password = SignUP.Password
             };
 
@@ -60,9 +61,9 @@ namespace Resturants.Application.AppServices
         public async Task<Response> Authenticate(LoginDto login)
         {
 
-            var GetcustomerId = _resturantContext.Customers.Where(x => x.CustomerID == login.UserId).FirstOrDefault();
+            var GetcustomerId = _resturantContext.Customers.Where(x => x.Id == login.UserId).FirstOrDefault();
 
-            var CustomerPassword = _resturantContext.Customers.Where(x => x.userName == login.userName && x.Password == login.Password).FirstOrDefault();
+            var CustomerPassword = _resturantContext.Customers.Where(x => x.UserName == login.userName && x.Password == login.Password).FirstOrDefault();
 
 
 
@@ -101,10 +102,10 @@ namespace Resturants.Application.AppServices
                 MenuName = x.Menus.MenuName,
                 ResturantsMenuItems = x.Menus.Items.Select(y => new ResturantsMenuItemDto()
                 {
-                    ItemId = y.ItemId,
-                    Categories = y.Categories,
-                    ItemName = y.ItemName,
-                    ItemPrice = y.ItemPrice
+                    ItemId = y.Id,
+                    Categories = y.Category,
+                    ItemName = y.Name,
+                    ItemPrice = y.Price
                 }).ToList()
             }).ToList();
 
@@ -114,12 +115,12 @@ namespace Resturants.Application.AppServices
         }
 
 
-        public async Task<Response> GetResturantMenu(int resturantId)
+        public async Task<Response<ResturantsMenuDto>> GetResturantMenu(int resturantId)
         {
-            var restaurantMenu = await _resturantContext.Resturants.Include(x => x.Orders).FirstOrDefaultAsync(s => s.ResturantID == resturantId);
-            return new Response
+            var allMenu =await GetAllMenus();
+            return new Response<ResturantsMenuDto>
             {
-                Data = restaurantMenu
+                Data = allMenu.FirstOrDefault(s => s.ResturantID == resturantId)
             };
         }
 
@@ -127,10 +128,10 @@ namespace Resturants.Application.AppServices
         {
 
 
-            List<Item> Items = new List<Item>();
+            List<Contracts.ResturantApp.Dtos.Item> Items = new List<Contracts.ResturantApp.Dtos.Item>();
             var obj = new Order
             {
-                Items = OrderRequest.Items.Select(x => new Item() { ItemId = x.ItemId, ItemName = x.ItemName, ItemPrice = x.ItemPrice }).ToList()
+                Items = OrderRequest.Items.Select(x => new DAL.Models.Item() { Id = x.Id, Name = x.Name, Price = x.Price }).ToList()
                 ,
                 //OrderStaus = OrderRequest.OrderStaus,
                 //TotalPrice =
@@ -142,7 +143,7 @@ namespace Resturants.Application.AppServices
 
                 Customer = new Customer()
                 {
-                    CustomerID = OrderRequest.CustomerId,
+                    Id = OrderRequest.CustomerId,
                     Name = OrderRequest.CustomerName,
                 },
 

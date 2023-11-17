@@ -13,17 +13,20 @@ namespace Resturants.DAL.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int CustomerID { get; set; }
+        public int Id { get; set; }
         [Required]
+        [StringLength(Consts.CustomerConsts.UserNameLength)]
         public string? Name { get; set; }
         public string? Address { get; set; }
         [Required]
-        public string? userName { get; set; }
+        [StringLength(Consts.CustomerConsts.UserNameLength)]
+        public string UserName { get; set; } = string.Empty;
         [Required]
-        public string? Password { get; set; }
+        [StringLength(Consts.CustomerConsts.UserNameLength)]
+        public string Password { get; set; } = string.Empty;
 
 
-       
+
 
 
 

@@ -2,29 +2,33 @@
 
 namespace Resturants.Application
 {
-    public class Response
+    public class Response<TResult>
     {
 
         public Response()
         {
             Message = null;
-            Data = null;
+            Data = default;
             ResponseCode = ResponseType.Error;
         }
 
         public bool? Success { get; set; }
         public string? Message { get; set; }
-        public object? Data { get; set; }
+        public TResult? Data { get; set; }
         public ResponseType? ResponseCode { get; set; }
 
 
     }
-    public class OkApiResponse<TResult> : Response
+
+    public class Response  : Response<Object>
     {
-        public TResult Result { get; set; }
+
+    }
+    public class OkApiResponse<TResult> : Response<TResult>
+    {
         public OkApiResponse(TResult result)
         {
-            Result = result;
+            Data = result;
         }
     }
 }
