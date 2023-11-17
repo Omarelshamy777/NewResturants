@@ -2,6 +2,7 @@
 using Resturants.Application;
 using Resturants.Application.Contracts.AuthApp;
 using Resturants.Application.Contracts.AuthApp.Dtos;
+using Resturants.Application.Contracts.ResturantApp;
 using Resturants.Application.Contracts.ResturantApp.Dtos;
 
 
@@ -13,11 +14,13 @@ namespace Resturants.Api.Controllers
     public class HomeController : ControllerBase
     {
         private readonly IAuthAppService authManager;
+        private readonly IResturantAppService resturantAppService;
 
 
-        public HomeController(IAuthAppService authManager)
+        public HomeController(IAuthAppService authManager , IResturantAppService resturantAppService)
         {
             this.authManager = authManager;
+            this.resturantAppService = resturantAppService; 
         }
 
         [HttpPost("signUp")]
@@ -40,7 +43,7 @@ namespace Resturants.Api.Controllers
         [HttpGet("getAllMenus")]
         public async Task<IActionResult> GetAllMenus()
         {
-            var customerSignUp = await authManager.GetAllMenus();
+            var customerSignUp = await resturantAppService.GetAllMenus();
 
             return Ok(customerSignUp);
         }
@@ -49,7 +52,7 @@ namespace Resturants.Api.Controllers
         public async Task<Response> AddOrder(OrderRequestDto orderRequest)
         {
 
-            var customerSignUp = await authManager.AddCustomerOrder(orderRequest);
+            var customerSignUp = await resturantAppService.AddCustomerOrder(orderRequest);
             return customerSignUp;
         }
 
@@ -57,7 +60,7 @@ namespace Resturants.Api.Controllers
         public async Task<IActionResult> GetResturantMenu(int resturantId)
         {
 
-            var customerSignUp = await authManager.GetResturantMenu(resturantId);
+            var customerSignUp = await resturantAppService.GetResturantMenu(resturantId);
             return Ok(customerSignUp.Data);
         }
 
@@ -67,7 +70,7 @@ namespace Resturants.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<Response> DeleteOrder(int orderid)
         {
-            var DeleteOrder = await authManager.Delete(orderid);
+            var DeleteOrder = await resturantAppService.Delete(orderid);
             return DeleteOrder;
         }
 
@@ -75,13 +78,13 @@ namespace Resturants.Api.Controllers
         [HttpPost("WaitingForDelivery")]
         public async Task<Response> ChangeOrderStatus(int orderid)
         {
-            var SendOrder = await authManager.SendOrder(orderid);
+            var SendOrder = await resturantAppService.SendOrder(orderid);
             return SendOrder;
         }
         [HttpPost("cancelOrder")]
         public async Task<Response> CancelOrder(int orderid)
         {
-            var SendOrder = await authManager.CancelOrder(orderid);
+            var SendOrder = await resturantAppService.CancelOrder(orderid);
             return SendOrder;
         }
 

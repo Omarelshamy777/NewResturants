@@ -16,19 +16,7 @@ namespace Resturants.Application.Contracts.AuthApp
         public Task<Response> SignUp(SignUpDto signUP);
 
         public Task<Response> Authenticate(LoginDto login);
-        //public Task<List<ResturantsMenu>> GetAllMenus();
-
-        //public  Task<Response> GetAllMenus();
-        public Task<List<ResturantsMenuDto>> GetAllMenus();
-
-        public Task<Response> AddCustomerOrder(OrderRequestDto orderRequest);
-
-        public Task<Response<ResturantsMenuDto>> GetResturantMenu(int resturantId);
-
-        public Task<Response> Delete(int orderId);
-
-        public Task<Response> SendOrder(int orderId);
-        public Task<Response> CancelOrder(int Orderid);
+     
 
 
 

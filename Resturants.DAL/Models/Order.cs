@@ -14,9 +14,9 @@ namespace Resturants.DAL.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int OrderId { get; set; }
+        public int Id { get; set; }
       
-        public string? OrderNumber { get; set; }
+        public string? Number { get; set; }
        
         public double? TotalPrice { get; set; }
         public OrderStatus OrderStaus { get; set; }

@@ -15,8 +15,8 @@ namespace Resturants.DAL.Models
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ResturantID { get; set; }
-        public string? ResturantName { get; set; }
+        public int Id { get; set; }
+        public string? Name { get; set; }
         public ICollection<Order>? Orders { get; set; }
 
 
