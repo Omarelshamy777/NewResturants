@@ -9,17 +9,17 @@ namespace Resturants.Application.Contracts.ResturantApp
 {
     public interface IResturantAppService
     {
-        //public  Task<Response> GetAllMenus();
-        public Task<List<ResturantMenuDto>> GetAllMenus();
 
-        public Task<Response> AddCustomerOrder(OrderRequestDto orderRequest);
+        public Task<List<ResturantDto>> GetAllMenus();
 
-        public Task<Response<ResturantMenuDto>> GetResturantMenu(int resturantId);
+        public Task<Response> AddCustomerOrder(OrderDto orderRequest);
+
+        public Task<Response<ResturantDto>> GetResturantMenu(int resturantId);
 
         public Task<Response> Delete(int orderId);
 
         public Task<Response> SendOrder(int orderId);
-        public Task<Response> CancelOrder(int Orderid);
+        public Task<Response> CancelOrder(int orderid);
 
     }
 }

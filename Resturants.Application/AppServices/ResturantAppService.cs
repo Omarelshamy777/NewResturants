@@ -21,23 +21,28 @@ namespace Resturants.Application.AppServices
                 _resturantContext = resturantContext;
         }
         //ResturantsMenu
-        public Task<List<ResturantMenuDto>> GetAllMenus()
+        public Task<List<ResturantDto>> GetAllMenus()
         {
 
-            var GetAllMenus = _resturantContext.Resturants.AsNoTracking().Include(c => c.Menus).ThenInclude(d => d.Items).Select(x => new ResturantMenuDto()
+            var GetAllMenus = _resturantContext.Resturants.AsNoTracking().Include(c => c.Menus).ThenInclude(d => d.Items).Select(x => new ResturantDto()
             {
-                ResturantID = x.Id,
-                ResturantName = x.Name
+                Id = x.Id,
+                 Name = x.Name
             ,
-                Id = x.Menus.Id,
-                Name = x.Menus.Name,
-                ResturantsMenuItems = x.Menus.Items.Select(y => new ResturantsMenuItemDto()
-                {
-                    Id = y.Id,
-                    Categories = y.Category,
-                    Name = y.Name,
-                    Price = y.Price
-                }).ToList()
+                Menu = new MenuDto(){ Id = x.Menus.Id,
+                Name = x.Menus.Name ,
+                    ResturantsMenuItems = x.Menus.Items.Select(y => new ItemDto()
+                    {
+                        Id = y.Id,
+                        Categories = y.Category,
+                        Name = y.Name,
+                        Price = y.Price
+                    }).ToList()
+
+
+                }
+                ,
+              
             }).ToList();
 
             return Task.FromResult(GetAllMenus);
@@ -46,23 +51,23 @@ namespace Resturants.Application.AppServices
         }
 
 
-        public async Task<Response<ResturantMenuDto>> GetResturantMenu(int resturantId)
+        public async Task<Response<ResturantDto>> GetResturantMenu(int resturantId)
         {
             var allMenu = await GetAllMenus();
-            return new Response<ResturantMenuDto>
+            return new Response<ResturantDto>
             {
-                Data = allMenu.FirstOrDefault(s => s.ResturantID == resturantId)
+                Data = allMenu.FirstOrDefault(s => s.Id == resturantId)
             };
         }
 
-        public async Task<Response> AddCustomerOrder(OrderRequestDto OrderRequest)
+        public async Task<Response> AddCustomerOrder(OrderDto orderRequest)
         {
 
 
-            List<Contracts.ResturantApp.Dtos.Item> Items = new List<Contracts.ResturantApp.Dtos.Item>();
+            //List<Contracts.ResturantApp.Dtos.Item> Items = new List<Contracts.ResturantApp.Dtos.Item>();
             var obj = new Order
             {
-                Items = OrderRequest.Items.Select(x => new DAL.Models.Item() { Id = x.Id, Name = x.Name, Price = x.Price }).ToList()
+                Items = orderRequest.Items.Select(x => new DAL.Models.Item() { Id = x.Id, Name = x.Name, Price = x.Price }).ToList()
                 ,
                 //OrderStaus = OrderRequest.OrderStaus,
                 //TotalPrice =
@@ -74,17 +79,18 @@ namespace Resturants.Application.AppServices
 
                 Customer = new Customer()
                 {
-                    Id = OrderRequest.CustomerId,
-                    Name = OrderRequest.CustomerName,
+                    Id = orderRequest.Customr.Id,
+                    Name = orderRequest.Customr.Name,
                 },
 
 
 
             };
 
-            if (OrderRequest.OrderStaus != OrderStatus.WaitingForDelivery)
+            if (orderRequest.Status != OrderStatus.WaitingForDelivery)
             {
                 var AddOrder = _resturantContext.Oreders.AddAsync(obj);
+
                 if (AddOrder.IsCompleted)
                 {
                     await _resturantContext.SaveChangesAsync();

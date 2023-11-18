@@ -49,7 +49,7 @@ namespace Resturants.Api.Controllers
         }
 
         [HttpPost("AddOrder")]
-        public async Task<Response> AddOrder(OrderRequestDto orderRequest)
+        public async Task<Response> AddOrder(OrderDto orderRequest)
         {
 
             var customerSignUp = await resturantAppService.AddCustomerOrder(orderRequest);
