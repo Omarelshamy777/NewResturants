@@ -29,5 +29,9 @@ namespace Resturants.DAL.Models
 
         [ForeignKey("CustomerID")]
         public Customer? Customer { get; set; }
+
+        public int ResturantId { get; set; }
+        [ForeignKey("ResturantId")]
+        public Resturant? Resturant { get; set; }
     }
 }

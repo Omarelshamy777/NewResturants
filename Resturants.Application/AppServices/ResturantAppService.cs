@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Castle.Core.Resource;
 
 namespace Resturants.Application.AppServices
 {
@@ -31,7 +32,7 @@ namespace Resturants.Application.AppServices
             ,
                 Menu = new MenuDto(){ Id = x.Menus.Id,
                 Name = x.Menus.Name ,
-                    ResturantsMenuItems = x.Menus.Items.Select(y => new ItemDto()
+                    Items = x.Menus.Items.Select(y => new ItemDto()
                     {
                         Id = y.Id,
                         Categories = y.Category,
@@ -64,36 +65,26 @@ namespace Resturants.Application.AppServices
         {
 
 
-            //List<Contracts.ResturantApp.Dtos.Item> Items = new List<Contracts.ResturantApp.Dtos.Item>();
             var obj = new Order
             {
-                Items = orderRequest.Items.Select(x => new DAL.Models.Item() { Id = x.Id, Name = x.Name, Price = x.Price }).ToList()
+                Items = orderRequest.Items.Select(x => new DAL.Models.Item() { Id = x.Id}).ToList()
                 ,
-                //OrderStaus = OrderRequest.OrderStaus,
-                //TotalPrice =
-
-
-                //OrderNumber = OrderRequest.OrderNumber,
-                //OrderStaus = OrderStatusEnum.Open,
-                //TotalPrice = OrderRequest.Price,
-
-                Customer = new Customer()
-                {
-                    Id = orderRequest.Customr.Id,
-                    Name = orderRequest.Customr.Name,
-                },
-
-
+                TotalPrice = orderRequest.Price,
+                OrderStaus = orderRequest.Status.Value,
+                CustomerID = orderRequest.CustomerId,
+                ResturantId = orderRequest.ResturantId
+               
 
             };
 
             if (orderRequest.Status != OrderStatus.WaitingForDelivery)
             {
                 var AddOrder = _resturantContext.Oreders.AddAsync(obj);
-
+             
                 if (AddOrder.IsCompleted)
                 {
                     await _resturantContext.SaveChangesAsync();
+                    var getOrderId = obj.Id;
                     return new Response
                     {
                         ResponseCode = ResponseType.Success,

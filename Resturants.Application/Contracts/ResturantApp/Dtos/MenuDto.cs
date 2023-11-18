@@ -10,7 +10,7 @@ namespace Resturants.Application.Contracts.ResturantApp.Dtos
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public List<ItemDto> ResturantsMenuItems { get; set; } = new List<ItemDto>();
+        public List<ItemDto> Items { get; set; } = new List<ItemDto>();
 
 
     }
