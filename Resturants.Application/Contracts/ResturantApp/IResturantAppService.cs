@@ -14,6 +14,8 @@ namespace Resturants.Application.Contracts.ResturantApp
 
         public Task<Response> AddCustomerOrder(OrderDto orderRequest);
 
+        public Task<Response<GetCustomerOrderDto>> GetCustomerOrder(int OrderId);
+
         public Task<Response<ResturantDto>> GetResturantMenu(int resturantId);
 
         public Task<Response> Delete(int orderId);

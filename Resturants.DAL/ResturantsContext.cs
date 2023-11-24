@@ -7,10 +7,10 @@ namespace Resturants.DAL
 {
     public class ResturantsContext : DbContext
     {
-        public ResturantsContext()
-        {
+        //public ResturantsContext()
+        //{
 
-        }
+        //}
         public ResturantsContext(DbContextOptions<ResturantsContext> options) : base(options)
         {
         }
@@ -21,13 +21,11 @@ namespace Resturants.DAL
        public DbSet<Resturants.DAL.Models.Resturant> Resturants { get; set; }
         public DbSet<Menu> Menus { get; set; }
 
+        public DbSet<ItemOrder> ItemOrders { get; set; }
+
+    
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Customer>().ToTable("Customer");
-            modelBuilder.Entity<Item>().ToTable("Item");
-            modelBuilder.Entity<Order>().ToTable("Order");
-            modelBuilder.Entity<Resturants.DAL.Models.Resturant>().ToTable("Resturant");
-            modelBuilder.Entity<Menu>().ToTable("Menu");
 
         }
 

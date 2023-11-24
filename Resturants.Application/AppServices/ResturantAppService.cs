@@ -67,12 +67,12 @@ namespace Resturants.Application.AppServices
 
             var obj = new Order
             {
-                Items = orderRequest.Items.Select(x => new DAL.Models.Item() { Id = x.Id}).ToList()
-                ,
+                ItemOrder = orderRequest.Items.Select(x => new DAL.Models.ItemOrder() { ItemId = x.Id}).ToList(),
+                
                 TotalPrice = orderRequest.Price,
                 OrderStaus = orderRequest.Status.Value,
                 CustomerID = orderRequest.CustomerId,
-                ResturantId = orderRequest.ResturantId
+                //ResturantId = orderRequest.ResturantId
                
 
             };
@@ -84,10 +84,13 @@ namespace Resturants.Application.AppServices
                 if (AddOrder.IsCompleted)
                 {
                     await _resturantContext.SaveChangesAsync();
+
+ 
                     var getOrderId = obj.Id;
                     return new Response
                     {
                         ResponseCode = ResponseType.Success,
+                        Data = getOrderId,
                         Message = "Order Added Succisfully"
                     };
                 }
@@ -110,12 +113,20 @@ namespace Resturants.Application.AppServices
             }
         }
 
-        public async Task<Response> GetOrder(int OrderId)
+        public async Task<Response<GetCustomerOrderDto>> GetCustomerOrder(int OrderId)
         {
+            var GetOrder =  _resturantContext.Oreders.AsNoTracking().Include(w => w.ItemOrder).ThenInclude(c => c.Item).Select(x => new GetCustomerOrderDto() { OrderId = x.Id, Item = x.ItemOrder.Select(a => new ItemDto() { Id = a.Item.Id ,Name = a.Item.Name , Categories = a.Item.Category , Price = a.Item.Price}).ToList() }).Where(x => x.OrderId == OrderId).FirstOrDefaultAsync() ;
 
-            var GetOrder = _resturantContext.Oreders.Include(c => c.Items).Include(d => d.Customer).ToList().Where(v => v.Id == OrderId);
-            return new Response { Data = GetOrder };
-
+            if (GetOrder != null)
+            {
+                return new Response<GetCustomerOrderDto> { Data = GetOrder.Result, ResponseCode = ResponseType.Success };
+            }
+            else
+            {
+                return new Response<GetCustomerOrderDto>();
+            }
+           
+   
 
         }
 

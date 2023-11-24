@@ -12,6 +12,10 @@ namespace Resturants.DAL.Models
 {
     public class Order
     {
+        public Order()
+        {
+                this.ItemOrder = new HashSet<ItemOrder>();
+        }
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
@@ -21,17 +25,15 @@ namespace Resturants.DAL.Models
         public double? TotalPrice { get; set; }
         public OrderStatus OrderStaus { get; set; }
 
-       
 
-        public ICollection<Item>? Items { get; set; }
+
+        public virtual ICollection<ItemOrder>? ItemOrder { get; set; } 
 
         public int CustomerID { get; set; }
 
         [ForeignKey("CustomerID")]
         public Customer? Customer { get; set; }
 
-        public int ResturantId { get; set; }
-        [ForeignKey("ResturantId")]
-        public Resturant? Resturant { get; set; }
+
     }
 }

@@ -22,21 +22,6 @@ namespace Resturants.DAL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ItemOrder", b =>
-                {
-                    b.Property<int>("ItemsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ItemsId", "OrderId");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("ItemOrder");
-                });
-
             modelBuilder.Entity("Resturants.DAL.Models.Customer", b =>
                 {
                     b.Property<int>("Id")
@@ -65,7 +50,7 @@ namespace Resturants.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customer", (string)null);
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("Resturants.DAL.Models.Item", b =>
@@ -96,7 +81,30 @@ namespace Resturants.DAL.Migrations
 
                     b.HasIndex("MenuId");
 
-                    b.ToTable("Item", (string)null);
+                    b.ToTable("Items");
+                });
+
+            modelBuilder.Entity("Resturants.DAL.Models.ItemOrder", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ItemId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItemId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("ItemOrders");
                 });
 
             modelBuilder.Entity("Resturants.DAL.Models.Menu", b =>
@@ -112,7 +120,7 @@ namespace Resturants.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Menu", (string)null);
+                    b.ToTable("Menus");
                 });
 
             modelBuilder.Entity("Resturants.DAL.Models.Order", b =>
@@ -132,7 +140,7 @@ namespace Resturants.DAL.Migrations
                     b.Property<int>("OrderStaus")
                         .HasColumnType("int");
 
-                    b.Property<int>("ResturantId")
+                    b.Property<int?>("ResturantId")
                         .HasColumnType("int");
 
                     b.Property<double?>("TotalPrice")
@@ -144,7 +152,7 @@ namespace Resturants.DAL.Migrations
 
                     b.HasIndex("ResturantId");
 
-                    b.ToTable("Order", (string)null);
+                    b.ToTable("Oreders");
                 });
 
             modelBuilder.Entity("Resturants.DAL.Models.Resturant", b =>
@@ -155,9 +163,6 @@ namespace Resturants.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("ItemId")
-                        .HasColumnType("int");
-
                     b.Property<int>("MenuId")
                         .HasColumnType("int");
 
@@ -166,26 +171,9 @@ namespace Resturants.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ItemId");
-
                     b.HasIndex("MenuId");
 
-                    b.ToTable("Resturant", (string)null);
-                });
-
-            modelBuilder.Entity("ItemOrder", b =>
-                {
-                    b.HasOne("Resturants.DAL.Models.Item", null)
-                        .WithMany()
-                        .HasForeignKey("ItemsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Resturants.DAL.Models.Order", null)
-                        .WithMany()
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.ToTable("Resturants");
                 });
 
             modelBuilder.Entity("Resturants.DAL.Models.Item", b =>
@@ -199,6 +187,25 @@ namespace Resturants.DAL.Migrations
                     b.Navigation("Menus");
                 });
 
+            modelBuilder.Entity("Resturants.DAL.Models.ItemOrder", b =>
+                {
+                    b.HasOne("Resturants.DAL.Models.Item", "Item")
+                        .WithMany("ItemOrder")
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Resturants.DAL.Models.Order", "Order")
+                        .WithMany("ItemOrder")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Item");
+
+                    b.Navigation("Order");
+                });
+
             modelBuilder.Entity("Resturants.DAL.Models.Order", b =>
                 {
                     b.HasOne("Resturants.DAL.Models.Customer", "Customer")
@@ -207,25 +214,17 @@ namespace Resturants.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Resturants.DAL.Models.Resturant", "Resturant")
+                    b.HasOne("Resturants.DAL.Models.Resturant", null)
                         .WithMany("Orders")
-                        .HasForeignKey("ResturantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ResturantId");
 
                     b.Navigation("Customer");
-
-                    b.Navigation("Resturant");
                 });
 
             modelBuilder.Entity("Resturants.DAL.Models.Resturant", b =>
                 {
-                    b.HasOne("Resturants.DAL.Models.Item", null)
-                        .WithMany("Resturants")
-                        .HasForeignKey("ItemId");
-
                     b.HasOne("Resturants.DAL.Models.Menu", "Menus")
-                        .WithMany("Resturants")
+                        .WithMany()
                         .HasForeignKey("MenuId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -235,14 +234,17 @@ namespace Resturants.DAL.Migrations
 
             modelBuilder.Entity("Resturants.DAL.Models.Item", b =>
                 {
-                    b.Navigation("Resturants");
+                    b.Navigation("ItemOrder");
                 });
 
             modelBuilder.Entity("Resturants.DAL.Models.Menu", b =>
                 {
                     b.Navigation("Items");
+                });
 
-                    b.Navigation("Resturants");
+            modelBuilder.Entity("Resturants.DAL.Models.Order", b =>
+                {
+                    b.Navigation("ItemOrder");
                 });
 
             modelBuilder.Entity("Resturants.DAL.Models.Resturant", b =>

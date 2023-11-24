@@ -4,6 +4,7 @@ using Resturants.Application.Contracts.AuthApp;
 using Resturants.Application.Contracts.AuthApp.Dtos;
 using Resturants.Application.Contracts.ResturantApp;
 using Resturants.Application.Contracts.ResturantApp.Dtos;
+using System.Threading.Tasks;
 
 
 namespace Resturants.Api.Controllers
@@ -55,6 +56,14 @@ namespace Resturants.Api.Controllers
             var customerSignUp = await resturantAppService.AddCustomerOrder(orderRequest);
             return customerSignUp;
         }
+        [HttpPost("GetCustomerOrder")]
+        public async Task<IActionResult> GetCustomerOrder(int orderId)
+        {
+
+            var customerSignUp = await resturantAppService.GetCustomerOrder(orderId);
+            return Ok(customerSignUp.Data);
+        }
+        
 
         [HttpGet("getResturantMenu")]
         public async Task<IActionResult> GetResturantMenu(int resturantId)

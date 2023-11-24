@@ -25,6 +25,8 @@ namespace Resturants.DAL.Models
         public Menu? Menus { get; set; }
 
 
+        
+
 
     }
 }

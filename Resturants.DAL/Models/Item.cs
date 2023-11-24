@@ -12,6 +12,10 @@ namespace Resturants.DAL.Models
 {
     public class Item
     {
+        public Item()
+        {
+                this.ItemOrder = new HashSet<ItemOrder>();
+        }
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
@@ -29,7 +33,9 @@ namespace Resturants.DAL.Models
         public int MenuId { get; set; }
         [ForeignKey("MenuId")]
         public Menu? Menus { get; set; }
-        public ICollection<Resturant>? Resturants { get; set; }
-        public ICollection<Order>? Order { get; set; }
+
+      
+   
+        public virtual ICollection<ItemOrder>? ItemOrder { get; set; }
     }
 }
