@@ -12,33 +12,18 @@ namespace Resturants.Api.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
-    public class HomeController : ControllerBase
+    public class ResturantsController : ControllerBase
     {
-        private readonly IAuthAppService authManager;
+
         private readonly IResturantAppService resturantAppService;
 
 
-        public HomeController(IAuthAppService authManager , IResturantAppService resturantAppService)
+        public ResturantsController(IResturantAppService resturantAppService)
         {
-            this.authManager = authManager;
             this.resturantAppService = resturantAppService; 
         }
 
-        [HttpPost("signUp")]
-        public async Task<Response> SignUp(SignUpDto signUP)
-        {
-            var customerSignUp = await authManager.SignUp(signUP);
-            return customerSignUp;
-        }
-
-
-        [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginDto login)
-        {
-
-            var customer = await authManager.Authenticate(login);
-            return Ok(customer);
-        }
+ 
 
 
         [HttpGet("getAllMenus")]
