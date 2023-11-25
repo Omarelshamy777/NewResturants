@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Castle.Core.Resource;
+using System.Net.NetworkInformation;
 
 namespace Resturants.Application.AppServices
 {
@@ -115,11 +116,11 @@ namespace Resturants.Application.AppServices
 
         public async Task<Response<GetCustomerOrderDto>> GetCustomerOrder(int OrderId)
         {
-            var GetOrder =  _resturantContext.Oreders.AsNoTracking().Include(w => w.ItemOrder).ThenInclude(c => c.Item).Select(x => new GetCustomerOrderDto() { OrderId = x.Id, Item = x.ItemOrder.Select(a => new ItemDto() { Id = a.Item.Id ,Name = a.Item.Name , Categories = a.Item.Category , Price = a.Item.Price}).ToList() }).Where(x => x.OrderId == OrderId).FirstOrDefaultAsync() ;
+            var GetOrder =  await _resturantContext.Oreders.AsNoTracking().Include(w => w.ItemOrder).ThenInclude(c => c.Item).Select(x => new GetCustomerOrderDto() { OrderId = x.Id, Item = x.ItemOrder.Select(a => new ItemDto() { Id = a.Item.Id ,Name = a.Item.Name , Categories = a.Item.Category , Price = a.Item.Price}).ToList() }).Where(x => x.OrderId == OrderId).FirstOrDefaultAsync() ;
 
             if (GetOrder != null)
             {
-                return new Response<GetCustomerOrderDto> { Data = GetOrder.Result, ResponseCode = ResponseType.Success };
+                return new Response<GetCustomerOrderDto> { Data = GetOrder, ResponseCode = ResponseType.Success };
             }
             else
             {
@@ -127,6 +128,65 @@ namespace Resturants.Application.AppServices
             }
            
    
+
+        }
+
+        public async Task<Response> EditOrder(OrderDto orderRequest)
+        {
+            var GetOrderCustomerId =  _resturantContext.Oreders.Select(x=>new OrderDto() {CustomerId = x.CustomerID , Status = x.OrderStaus }).Where(c=>c.CustomerId == orderRequest.CustomerId).FirstOrDefault();
+         
+
+            
+
+if (GetOrderCustomerId.CustomerId == orderRequest.CustomerId)
+            {
+                if (GetOrderCustomerId.Status == OrderStatus.Open)
+                {
+
+                    var obj = new Order
+                    {
+                        Id = orderRequest.Id.Value,
+                        ItemOrder = orderRequest.Items.Select(x => new DAL.Models.ItemOrder() { ItemId = x.Id }).ToList(),
+                        Number = orderRequest.Number,
+                        TotalPrice = orderRequest.Price,
+                        OrderStaus = orderRequest.Status.Value,
+                        CustomerID = orderRequest.CustomerId,
+                        //ResturantId = orderRequest.ResturantId
+
+
+                    };
+                    var AddOrder = _resturantContext.Oreders.Update(obj);
+                    await _resturantContext.SaveChangesAsync();
+                    var getOrderId = obj.Id;
+                    return new Response
+                    {
+                        ResponseCode = ResponseType.Success,
+                        Data = getOrderId,
+                        Message = "Order Updated Succesfully"
+                    };
+                }
+                else
+                {
+                    return new Response
+                    {
+                        ResponseCode = ResponseType.Success,
+                        Message = "the order is being delevered so you cant update on it please request another one"
+                    };
+
+                }
+
+            }
+            else
+            {
+                return new Response
+                {
+                    ResponseCode = ResponseType.Success,
+                    Message = "Only one customer who can update in this order the one who requested the order"
+                };
+
+
+
+            }
 
         }
 
@@ -159,7 +219,7 @@ namespace Resturants.Application.AppServices
             {
                 return new Response
                 {
-                    Message = "Error in deleting Order"
+                    Message = "Error in sending Order"
                 };
             }
             item.OrderStaus = OrderStatus.WaitingForDelivery;

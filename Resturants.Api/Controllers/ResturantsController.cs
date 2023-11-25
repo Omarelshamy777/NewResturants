@@ -34,13 +34,15 @@ namespace Resturants.Api.Controllers
             return Ok(customerSignUp);
         }
 
-        [HttpPost("AddOrder")]
+        [HttpPost("AddCustomerOrder")]
         public async Task<Response> AddOrder(OrderDto orderRequest)
         {
 
             var customerSignUp = await resturantAppService.AddCustomerOrder(orderRequest);
             return customerSignUp;
         }
+
+
         [HttpPost("GetCustomerOrder")]
         public async Task<IActionResult> GetCustomerOrder(int orderId)
         {
@@ -48,7 +50,15 @@ namespace Resturants.Api.Controllers
             var customerSignUp = await resturantAppService.GetCustomerOrder(orderId);
             return Ok(customerSignUp.Data);
         }
-        
+
+        [HttpPost("EditCustomerOrder")]
+        public async Task<Response> EditOrder(OrderDto orderRequest)
+        {
+
+            var customerSignUp = await resturantAppService.EditOrder(orderRequest);
+            return customerSignUp;
+        }
+
 
         [HttpGet("getResturantMenu")]
         public async Task<IActionResult> GetResturantMenu(int resturantId)
