@@ -64,13 +64,34 @@ namespace Resturants.Application.AppServices
 
         public async Task<Response> AddCustomerOrder(OrderDto orderRequest)
         {
+            var GetItemsId = orderRequest.Items.Select(x => x.Id).ToList();
+            var GetItemsQuantity = orderRequest.Items.Select(x => x.Quantity).ToList();
+
+            var GetItemPrices = _resturantContext.Items.
+                Select(x => new ItemDto { Price = x.Price, Id = x.Id })
+                .Where(x => GetItemsId.Contains(x.Id))
+                .ToList();
+
+            double TotalPrice = 0;
+            double ItemTotalPrice = 0;
+            int i = 0;
+            
+            foreach (var item in GetItemPrices ) {
+   
+                    TotalPrice += (item.Price * GetItemsQuantity[i]);
+                item.Quantity = GetItemsQuantity[i];
+                item.TotalPrice = (item.Price * GetItemsQuantity[i]);
+                i++;
+                
+            }
+         
 
 
             var obj = new Order
             {
-                ItemOrder = orderRequest.Items.Select(x => new DAL.Models.ItemOrder() { ItemId = x.Id}).ToList(),
+                ItemOrder = orderRequest.Items.Select(x => new DAL.Models.ItemOrder() { ItemId = x.Id }).ToList(),
                 
-                TotalPrice = orderRequest.Price,
+                TotalPrice = TotalPrice,
                 OrderStaus = orderRequest.Status.Value,
                 CustomerID = orderRequest.CustomerId,
                 //ResturantId = orderRequest.ResturantId
@@ -147,7 +168,6 @@ if (GetOrderCustomerId.CustomerId == orderRequest.CustomerId)
                     {
                         Id = orderRequest.Id.Value,
                         ItemOrder = orderRequest.Items.Select(x => new DAL.Models.ItemOrder() { ItemId = x.Id }).ToList(),
-                        Number = orderRequest.Number,
                         TotalPrice = orderRequest.Price,
                         OrderStaus = orderRequest.Status.Value,
                         CustomerID = orderRequest.CustomerId,

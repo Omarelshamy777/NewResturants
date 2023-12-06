@@ -26,6 +26,8 @@ namespace Resturants.DAL.Models
         [Required]
  
         public double Price { get; set; }
+
+
         [Required]
         [StringLength(Consts.ItemConsts.CategoryLength)]
         public string Category { get; set; }=string.Empty;

@@ -19,13 +19,9 @@ namespace Resturants.DAL.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-      
-        public string? Number { get; set; }
        
         public double? TotalPrice { get; set; }
         public OrderStatus OrderStaus { get; set; }
-
-
 
         public virtual ICollection<ItemOrder>? ItemOrder { get; set; } 
 

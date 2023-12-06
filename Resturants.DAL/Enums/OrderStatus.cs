@@ -5,10 +5,10 @@ namespace Resturants.DAL.Enums
     public enum OrderStatus
     {
         [Display(Name = "Open")]
-        Open = 0,
+        Open = 11,
         [Display(Name = "Waiting For Delivery")]
-        WaitingForDelivery = 1,
+        WaitingForDelivery = 12,
         [Display(Name = "Cancelled")]
-        Cancelled = 2
+        Cancelled = 13
     }
 }

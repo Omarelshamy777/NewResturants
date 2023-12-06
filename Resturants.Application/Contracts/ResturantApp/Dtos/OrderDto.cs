@@ -18,11 +18,14 @@ namespace Resturants.Application.Contracts.ResturantApp.Dtos
 
         public double? Price { get; set; }
         public OrderStatus? Status { get; set; }
-
+        [Required]
         public int CustomerId { get; set; }
+     
 
         public int ResturantId { get; set; }
-      
+        public double TotalPrice { get; set; }
+
+
         public List<ItemDto>? Items { get; set; }
 
     }
